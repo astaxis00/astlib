@@ -71,7 +71,7 @@ function lib.newWindow(title, subtitle)
 
         local UserInputService = game:GetService("UserInputService")
         
-        local gui = script.Parent
+        local gui = Window
         
         local dragging
         local dragInput
