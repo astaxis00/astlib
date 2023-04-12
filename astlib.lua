@@ -67,6 +67,48 @@ function lib.newWindow(title, subtitle)
         SubTitle.TextWrapped = true
         SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+        local script = Instance.new('LocalScript', Window)
+
+        local UserInputService = game:GetService("UserInputService")
+        
+        local gui = script.Parent
+        
+        local dragging
+        local dragInput
+        local dragStart
+        local startPos
+        
+        local function update(input)
+            local delta = input.Position - dragStart
+            gui:TweenPosition(UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y), Enum.EasingDirection.InOut, Enum.EasingStyle.Sine, 0.04, true) -- This is what I changed
+        end
+        
+        gui.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                startPos = gui.Position
+        
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragging = false
+                    end
+                end)
+            end
+        end)
+        
+        gui.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+            end
+        end)
+        
+        UserInputService.InputChanged:Connect(function(input)
+            if input == dragInput and dragging then
+                update(input)
+            end
+        end)
+
 function window.addTab(tabName)
     tabNum = tabNum + 1
     
@@ -75,7 +117,7 @@ function window.addTab(tabName)
     
     -- Configurações dos objetos GUI da aba
     tabButton.Name = "TabButton"
-    tabButton.Parent = tabsFrame
+    tabButton.Parent = TabFrame
     tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     tabButton.Position = UDim2.new(0, 10, 0, yOffset + (tabNum - 1) * 55)
     tabButton.Size = UDim2.new(0, 60, 0, 50)
@@ -94,7 +136,7 @@ function window.addTab(tabName)
     
     -- Função para selecionar a aba
     local function selectTab()
-        for _, child in ipairs(tabsFrame:GetChildren()) do
+        for _, child in ipairs(TabFrame:GetChildren()) do
             if child:IsA("TextButton") then
                 child.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
             end
@@ -112,7 +154,7 @@ function window.addTab(tabName)
     tabButton.MouseButton1Click:Connect(selectTab)
     
     -- Seleciona automaticamente a primeira aba criada
-    if #tabsFrame:GetChildren() == 1 then
+    if #TabFrame:GetChildren() == 1 then
         selectTab()
     end
     
