@@ -79,6 +79,7 @@ function window.addTab(tabName)
     TabButton.Text = tabName
     TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     TabButton.TextSize = 14.000
+    tabButton.TextScaled = true
 
     TabContent.Name = "TabContent"
     TabContent.Parent = Window
