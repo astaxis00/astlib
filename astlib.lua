@@ -65,6 +65,50 @@ function lib.newWindow(title, subtitle)
         SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 function window.addTab(tabName)
+    local TabContent = Instance.new("Frame")
+    local TabButton = Instance.new("TextButton")
+    -- Configurações dos objetos GUI da aba
+
+    TabButton.Name = "TabButton"
+    TabButton.Parent = TabFrame
+    TabButton.BackgroundColor3 = Color3.fromRGB(0, 98, 255)
+    TabButton.BorderSizePixel = 0
+    TabButton.Position = UDim2.new(0, 0, -0.00266516209, 0)
+    TabButton.Size = UDim2.new(0, 180, 0, 50)
+    TabButton.Font = Enum.Font.GothamBold
+    TabButton.Text = tabName
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.TextSize = 14.000
+
+    TabContent.Name = "TabContent"
+    TabContent.Parent = Window
+    TabContent.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+    TabContent.BorderSizePixel = 0
+    TabContent.Position = UDim2.new(0.299159676, 0, 0.00228832942, 0)
+    TabContent.Size = UDim2.new(0, 416, 0, 435)
+    TabContent.Visible = false
+
+    local function selectTab()
+        for _, child in ipairs(tabsFrame:GetChildren()) do
+            if child:IsA("TextButton") then
+                child.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            end
+        end
+        tabButton.BackgroundColor3 = Color3.fromRGB(0, 98, 255)
+        for _, child in ipairs(buttonsFrame:GetChildren()) do
+            if child:IsA("Frame") then
+                child.Visible = false
+            end
+        end
+        tabContent.Visible = true
+    end
+
+    tabButton.MouseButton1Click:Connect(selectTab)
+
+    if #tabsFrame:GetChildren() == 1 then
+        selectTab()
+    end
+
     return tabContent
 end
 
