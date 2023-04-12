@@ -64,60 +64,59 @@ function lib.newWindow(title, subtitle)
         SubTitle.TextWrapped = true
         SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-        local tabNum = 0 -- contador de abas criadas
-        local yOffset = 0 -- deslocamento vertical inicial
+        local Tabs = {}
 
-function window.addTab(tabName)
-    tabNum = tabNum + 1
-    
-    local tabContent = Instance.new("Frame")
-    local tabButton = Instance.new("TextButton")
-    
-    -- Configurações dos objetos GUI da aba
-    tabButton.Name = "TabButton"
-    tabButton.Parent = tabsFrame
-    tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    tabButton.Position = UDim2.new(0, 10, 0, yOffset + (tabNum - 1) * 55)
-    tabButton.Size = UDim2.new(0, 60, 0, 50)
-    tabButton.Font = Enum.Font.SourceSans
-    tabButton.Text = tabName
-    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tabButton.TextSize = 14
-    tabButton.AutoButtonColor = false
-    
-    tabContent.Name = "TabContent"
-    tabContent.Parent = buttonsFrame
-    tabContent.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-    tabContent.Position = UDim2.new(0, 10, 0, 10)
-    tabContent.Size = UDim2.new(1, -20, 1, -20)
-    tabContent.Visible = false
-    
-    -- Função para selecionar a aba
-    local function selectTab()
-        for _, child in ipairs(tabsFrame:GetChildren()) do
-            if child:IsA("TextButton") then
-                child.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        function Tabs.new()
+            local tabs = {}
+            local selectedTab = nil
+            
+            function tabs:addTab(tabName)
+                local tab = {
+                    name = tabName,
+                    content = Instance.new("Frame"),
+                }
+                
+                tab.content.Name = "TabContent"
+                tab.content.Size = UDim2.new(1, 0, 1, 0)
+                tab.content.BackgroundTransparency = 1
+                
+                local label = Instance.new("TextLabel")
+                label.Name = "TabLabel"
+                label.Parent = tabsFrame
+                label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                label.BackgroundTransparency = 1
+                label.Position = UDim2.new(0, 10 + #tabs * 60, 0, 10)
+                label.Size = UDim2.new(0, 60, 0, 30)
+                label.Font = Enum.Font.SourceSans
+                label.Text = tabName
+                label.TextColor3 = Color3.fromRGB(255, 255, 255)
+                label.TextSize = 14
+                
+                label.MouseButton1Click:Connect(function()
+                    if selectedTab then
+                        selectedTab.content.Visible = false
+                    end
+                    
+                    tab.content.Visible = true
+                    selectedTab = tab
+                end)
+                
+                tabsFrame.Size = UDim2.new(0, 80 + #tabs * 60, 0, 40)
+                
+                table.insert(tabs, tab)
+                
+                if #tabs == 1 then
+                    label:FireEvent("MouseButton1Click")
+                end
+                
+                return tab.content
             end
+            
+            return tabs
         end
-        tabButton.BackgroundColor3 = Color3.fromRGB(0, 98, 255)
-        for _, child in ipairs(buttonsFrame:GetChildren()) do
-            if child:IsA("Frame") then
-                child.Visible = false
-            end
-        end
-        tabContent.Visible = true
-    end
-    
-    -- Evento de clique do botão da aba
-    tabButton.MouseButton1Click:Connect(selectTab)
-    
-    -- Seleciona automaticamente a primeira aba criada
-    if #tabsFrame:GetChildren() == 1 then
-        selectTab()
-    end
-    
-
-    return tabContent
+        
+        return Tabs
+        
 end
 
 return window
