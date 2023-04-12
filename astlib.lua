@@ -120,7 +120,7 @@ function window.addTab(tabName)
     tabButton.Parent = TabFrame
     tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     tabButton.Position = UDim2.new(0, 10, 0, yOffset + (tabNum - 1) * 55)
-    tabButton.Size = UDim2.new(0, 60, 0, 50)
+    tabButton.Size = UDim2.new(0, 180, 0, 50)
     tabButton.Font = Enum.Font.SourceSans
     tabButton.Text = tabName
     tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
