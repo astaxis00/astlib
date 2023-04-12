@@ -64,31 +64,35 @@ function lib.newWindow(title, subtitle)
         SubTitle.TextWrapped = true
         SubTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+        local tabNum = 0 -- contador de abas criadas
+        local yOffset = 0 -- deslocamento vertical inicial
+
 function window.addTab(tabName)
-    local TabContent = Instance.new("Frame")
-    local TabButton = Instance.new("TextButton")
+    tabNum = tabNum + 1
+    
+    local tabContent = Instance.new("Frame")
+    local tabButton = Instance.new("TextButton")
+    
     -- Configurações dos objetos GUI da aba
-
-    TabButton.Name = "TabButton"
-    TabButton.Parent = TabFrame
-    TabButton.BackgroundColor3 = Color3.fromRGB(0, 98, 255)
-    TabButton.BorderSizePixel = 0
-    TabButton.Position = UDim2.new(0, 0, -0.00266516209, 0)
-    TabButton.Size = UDim2.new(0, 180, 0, 50)
-    TabButton.Font = Enum.Font.GothamBold
-    TabButton.Text = tabName
-    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TabButton.TextSize = 14.000
-    tabButton.TextScaled = true
-
-    TabContent.Name = "TabContent"
-    TabContent.Parent = Window
-    TabContent.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
-    TabContent.BorderSizePixel = 0
-    TabContent.Position = UDim2.new(0.299159676, 0, 0.00228832942, 0)
-    TabContent.Size = UDim2.new(0, 416, 0, 435)
-    TabContent.Visible = false
-
+    tabButton.Name = "TabButton"
+    tabButton.Parent = tabsFrame
+    tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    tabButton.Position = UDim2.new(0, 10, 0, yOffset + (tabNum - 1) * 55)
+    tabButton.Size = UDim2.new(0, 60, 0, 50)
+    tabButton.Font = Enum.Font.SourceSans
+    tabButton.Text = tabName
+    tabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    tabButton.TextSize = 14
+    tabButton.AutoButtonColor = false
+    
+    tabContent.Name = "TabContent"
+    tabContent.Parent = buttonsFrame
+    tabContent.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    tabContent.Position = UDim2.new(0, 10, 0, 10)
+    tabContent.Size = UDim2.new(1, -20, 1, -20)
+    tabContent.Visible = false
+    
+    -- Função para selecionar a aba
     local function selectTab()
         for _, child in ipairs(tabsFrame:GetChildren()) do
             if child:IsA("TextButton") then
@@ -103,12 +107,15 @@ function window.addTab(tabName)
         end
         tabContent.Visible = true
     end
-
+    
+    -- Evento de clique do botão da aba
     tabButton.MouseButton1Click:Connect(selectTab)
-
+    
+    -- Seleciona automaticamente a primeira aba criada
     if #tabsFrame:GetChildren() == 1 then
         selectTab()
     end
+    
 
     return tabContent
 end
